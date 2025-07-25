@@ -8,7 +8,7 @@ This repository offers description of the analytical steps needed for plasmid-en
 Identify and compare plasmids (and chromosomes) from relevant bacterial isolates sequenced with the RBK114 library preparation kit on a MinION flowcell:
 
 - Reconstruct plasmids and annotate resistance/replicon markers
-- Assess relatedness (SNP distances, plasmid clustering)
+- Assess plasmid and chromosomal relatedness (SNP distances, plasmid clustering)
 ---
 
 ## 2. Workflow Overview
