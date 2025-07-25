@@ -35,7 +35,7 @@ Identify and compare plasmids (and chromosomes) from relevant bacterial isolates
 
 ## 4. Detailed Steps & Codes
 
-> Replace placeholder paths, models, parameters as appropriate.
+> Note: Replace placeholder paths, models, parameters as appropriate.
 
 ### 4.1 Basecalling
 
