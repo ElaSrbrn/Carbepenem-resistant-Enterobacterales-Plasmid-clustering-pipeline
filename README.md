@@ -1,21 +1,17 @@
 # Enterobacterales-chromosomal-and-plasmid-clustering-pipeline
-# Plasmid Outbreak Pipeline
-
-A concise, step-wise outline for plasmid-focused outbreak investigation using Oxford Nanopore reads. This README describes *what* to do and *which* tools are used, accompanied by illustrative code snippets derived from your pipeline. It is **not** a turnkey script.
+This repository offers description of the analytical steps needed for plasmid-encoded resistance dynamics investigation using Oxford Nanopore reads. This README outlines what to do and which tools to use. There are also automated softwares that provide similar analyses for non-experts, but the tools and parameters that they use are usually not fully visible. 
 
 ---
 
 ## 1. Goal & Scope
 
-Identify and compare plasmids (and chromosomes) from suspected outbreak isolates:
+Identify and compare plasmids (and chromosomes) from relevant bacterial isolates sequenced with the RBK114 library preparation kit on a MinION flowcell:
 
 - Reconstruct plasmids and annotate resistance/replicon markers
 - Assess relatedness (SNP distances, plasmid clustering)
-- Produce interpretable summaries/tables for epidemiological follow‑up
-
 ---
 
-## 2. High-level Workflow
+## 2. Workflow Overview
 
 1. **Signal → Bases**: Basecall raw POD5 signals with Dorado
 2. **Per‑sample separation**: Demultiplex barcoded reads (Dorado demux)
@@ -34,11 +30,10 @@ Identify and compare plasmids (and chromosomes) from suspected outbreak isolates
 
 - Raw POD5 or basecalled FASTQ (e.g., from MinKNOW)
 - Barcode list (e.g. `01–24`)
-- Reference genome FASTA (for chromosomal SNPs)
 
 ---
 
-## 4. Detailed Steps & Example Snippets
+## 4. Detailed Steps & Codes
 
 > Replace placeholder paths, models, parameters as appropriate.
 
