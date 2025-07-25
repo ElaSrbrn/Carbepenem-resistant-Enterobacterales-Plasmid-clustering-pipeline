@@ -1,4 +1,4 @@
-# Enterobacterales-chromosomal-and-plasmid-clustering-pipeline
+# Enterobacterales: Chromosomal, and plasmid-clustering pipeline
 This repository offers description of the analytical steps needed for plasmid-encoded resistance dynamics investigation using Oxford Nanopore reads. This README outlines what to do and which tools to use. There are also automated softwares that provide similar analyses for non-experts, but the tools and parameters that they use are usually not fully visible. 
 
 ---
