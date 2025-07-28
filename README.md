@@ -82,7 +82,7 @@ mkdir -p "$PC_DIR" "$NF_DIR" "$STATS_DIR"
 for bc in $BCLIST; do
   in="${RAW_PREFIX}${bc}.fastq"; [[ -s "$in" ]] || continue
   trim="$PC_DIR/trimmed_${bc}.fastq"
-  out="$NF_DIR/filtered_barcode${bc}_passed.fastq"
+  out="$NF_DIR/filtered_barcode${bc}.fastq"
   porechop -i "$in" -o "$trim"
   NanoFilt -q "$QMIN" -l "$LMIN" < "$trim" > "$out"
   rm -f "$trim"
@@ -102,34 +102,55 @@ done
 GENOME_SIZE="5m"; THREADS=8
 FLY_DIR="$OUTDIR/flye"; mkdir -p "$FLY_DIR"
 for bc in $BCLIST; do
-  reads="$NF_DIR/filtered_barcode${bc}_passed.fastq"; [[ -s "$reads" ]] || continue
+  reads="$NF_DIR/filtered_barcode${bc}.fastq"; [[ -s "$reads" ]] || continue
   flye --nano-hq "$reads" --out-dir "$FLY_DIR/barcode${bc}" \
        --genome-size "$GENOME_SIZE" --threads "$THREADS"
 done
 ```
 
-### 4.5 Consensus Polishing
+### 4.5 Depth estimation and Polishing
 
 **Tools:** Minimap2, Samtools, Medaka v2.0.1 (`--bacteria`)
 
 ```bash
-MIN_DIR="$OUTDIR/minimap"; MEDAKA_DIR="$OUTDIR/medaka"
+MIN_DIR="$OUTDIR/minimap"
+MEDAKA_DIR="$OUTDIR/medaka"
 mkdir -p "$MIN_DIR" "$MEDAKA_DIR"
-THREADS=8; MODEL="r1041_min_sup_g632"
+
+THREADS=8
+MODEL="r1041_e82_400bps_sup_g644"
+
 for bc in $BCLIST; do
   asm="$FLY_DIR/barcode${bc}/assembly.fasta"
-  reads="$NF_DIR/filtered_barcode${bc}_passed.fastq"
-  [[ -s "$asm" && -s "$reads" ]] || continue
-  bam="$MIN_DIR/aligned_barcode${bc}.bam"
-  med_out="$MEDAKA_DIR/barcode${bc}"; mkdir -p "$med_out"
+  reads="$NF_DIR/filtered_barcode${bc}.fastq"
+  med_out="$MEDAKA_DIR/barcode${bc}"
 
-  minimap2 -t "$THREADS" -ax map-ont "$asm" "$reads" \
+  mkdir -p "$med_out"
+
+  medaka_consensus -i "$reads" -d "$asm" -o "$med_out" \
+    -t "$THREADS" -m "$MODEL" --bacteria
+done
+
+
+# Run depth estimation using minimap2 + samtools
+for bc in $BCLIST; do
+  asm="$FLY_DIR/barcode${bc}/assembly.fasta"
+  reads="$NF_DIR/filtered_barcode${bc}.fastq"
+  bam="$COV_DIR/barcode${bc}.bam"
+  depth_file="$COV_DIR/depth_barcode${bc}.txt"
+
+  [[ -s "$asm" && -s "$reads" ]] || { echo "[Coverage] Missing files for barcode $bc. Skipping."; continue; }
+
+  minimap2 -ax map-ont "$asm" "$reads" -t "$THREADS" \
     | samtools view -b - \
     | samtools sort -@ "$THREADS" -o "$bam" -
-  samtools index "$bam"
-  medaka_consensus -b "$bam" -d "$asm" -o "$med_out" \
-    -t "$THREADS" -m "$MODEL" --bacteria
 
+  samtools index "$bam"
+  samtools depth "$bam" > "$depth_file"
+
+  # Calculate and print average depth
+  avg=$(awk '{sum += $3} END {if (NR > 0) print sum/NR; else print 0}' "$depth_file")
+  echo "Barcode $bc average depth: $avg"
 done
 ```
 
@@ -162,17 +183,7 @@ done
 
 **Tools:** Snippy, snippy-core, snp-dists
 
-```bash
-REFERENCE="/path/to/reference.fasta"
-SNIPPY_DIR="$OUTDIR/snippy"; mkdir -p "$SNIPPY_DIR"
-for SAMPLE in "$MEDAKA_DIR"/barcode*/consensus.fasta; do
-  [[ -s "$SAMPLE" ]] || continue
-  BN=$(basename "$(dirname "$SAMPLE")")
-  snippy --cpus 4 --ref "$REFERENCE" --ctgs "$SAMPLE" --outdir "$SNIPPY_DIR/$BN"
-done
-snippy-core --ref "$REFERENCE" --prefix snippy_core "$SNIPPY_DIR"/*
-snp-dists snippy_core.full.aln > "$SNIPPY_DIR/snp_distances.tsv"
-```
+tbd
 
 ### 4.9 Plasmid Clustering / Distances
 
