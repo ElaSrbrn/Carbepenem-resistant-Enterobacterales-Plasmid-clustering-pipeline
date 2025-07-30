@@ -118,7 +118,6 @@ MEDAKA_DIR="$OUTDIR/medaka"
 mkdir -p "$MIN_DIR" "$MEDAKA_DIR"
 
 THREADS=8
-MODEL="r1041_e82_400bps_sup_g644"
 
 for bc in $BCLIST; do
   asm="$FLY_DIR/barcode${bc}/assembly.fasta"
@@ -128,7 +127,7 @@ for bc in $BCLIST; do
   mkdir -p "$med_out"
 
   medaka_consensus -i "$reads" -d "$asm" -o "$med_out" \
-    -t "$THREADS" -m "$MODEL" --bacteria
+    -t "$THREADS" --bacteria
 done
 
 
