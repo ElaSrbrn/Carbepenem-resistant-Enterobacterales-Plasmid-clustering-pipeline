@@ -218,9 +218,9 @@ pling align --containment_distance 0.3 --cores 8 --sourmash plasmid.txt "$OUTDIR
 
 ### 4.10 Miscellaneous & Reporting
 
-- SNP/Mash distance matrices and visualizations were assembled manually
+- SNP/Mash distance matrices and visualizations were done manually
+- In general, I recommend bandage to get assembly visualisations and ProkSee for visualisation of functional annotations. 
 - Species identification via Pathogenwatch and/or PubMLST (see corresponding publication)
-- Archive: command logs, software versions, parameter files, results summaries
 
 ---
 
