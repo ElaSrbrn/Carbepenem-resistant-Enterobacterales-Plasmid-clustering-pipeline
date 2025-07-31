@@ -5,7 +5,7 @@ This repository offers description of the analytical steps needed for plasmid-en
 
 ## 1. Goal & Scope
 
-Identify and compare plasmids (and chromosomes) from relevant bacterial isolates sequenced with the RBK114 library preparation kit on a MinION flowcell:
+Identify and compare plasmids (and chromosomes) from relevant bacterial isolates sequenced with the RBK114 library preparation kit on a R10.4.1 MinION flowcell:
 
 - Reconstruct plasmids and annotate resistance/replicon markers
 - Assess plasmid and chromosomal relatedness (SNP distances, plasmid clustering)
@@ -15,9 +15,9 @@ Identify and compare plasmids (and chromosomes) from relevant bacterial isolates
 
 1. **Signal → Bases**: Basecall raw POD5 signals with Dorado
 2. **Per‑sample separation**: Demultiplex barcoded reads (Dorado demux)
-3. **Read cleaning**: Adapter trimming & QC filtering (*optional if basecaller model handles it*)
+3. **Read cleaning**: Adapter trimming & QC filtering (*optional if the newer dorado basecaller model handles it with the --trim adapter flag*)
 4. **Assembly**: De novo assembly (Flye)
-5. **Consensus polishing**: Map & correct (Minimap2 + Medaka v2.0.1 with `--bacteria` flag)
+5. **Consensus polishing**: Correct (Medaka v2.0.1 with `--bacteria` flag)
 6. **Plasmid reconstruction & typing**: MOB‑Suite (mob\_recon)
 7. **AMR gene detection**: AMRFinderPlus
 8. **Chromosomal relatedness**: SNP calling & core alignment (Snippy + snp-dists)
@@ -94,6 +94,10 @@ for fq in "$NF_DIR"/*.fastq; do
 done
 ```
 
+Notes: 
+* If you used multiple barcodes for the same sample and concatenated the reads you need to be careful with duplicated read IDs, as that might impair Flye from assembling properly. Thus, make sure to remove any duplicated reads before moving on to the assembly step.
+* In case you want to read quality metric outputs, you could try seqkit (see here: https://github.com/shenwei356/seqkit for more information). Alternatively, newer dorado basecalling models offer a summary of basecalled data quality metrics. 
+
 ### 4.4 Assembly
 
 **Tool:** Flye
@@ -107,6 +111,7 @@ for bc in $BCLIST; do
        --genome-size "$GENOME_SIZE" --threads "$THREADS"
 done
 ```
+Note: I added the genome size, however for newer versions of Flye this might not be necessary anymore. 
 
 ### 4.5 Depth estimation and Polishing
 
@@ -130,6 +135,7 @@ for bc in $BCLIST; do
     -t "$THREADS" --bacteria
 done
 
+*Note: The --bacteria flag has been shown to improve the assembly quality and reduce the error rates of bacterial assemblies. Medaka models <v2 have not necessarily improved assembly quality, which meamt that polishing was not necessarily recommended previously. Thus, Medaka >v2 should be used. Dorado also includes polishing steps, which improve assembly quality (especially for hac basecalled data) and might replace Medaka polishing in the future, so it might be worth considering those. 
 
 # Run depth estimation using minimap2 + samtools
 for bc in $BCLIST; do
@@ -156,6 +162,7 @@ done
 ### 4.6 Plasmid Reconstruction & Typing
 
 **Tool:** MOB‑Suite
+Run Mob-Suite on polished assemblies.
 
 ```bash
 MOB_DIR="$OUTDIR/mob"; mkdir -p "$MOB_DIR"
@@ -168,6 +175,7 @@ done
 ### 4.7 AMR Gene Detection
 
 **Tool:** AMRFinderPlus
+Run AMRFinderPlus on polished assemblies.
 
 ```bash
 AMR_DIR="$OUTDIR/amr"; mkdir -p "$AMR_DIR"
@@ -187,6 +195,7 @@ tbd
 ### 4.9 Plasmid Clustering / Distances
 
 **Tools:** Mash, Pling
+Run Mash and Pling on polished plasmid assemblies of interest (e.g., IncN, IncL/M) etc. 
 
 ```bash
 # 1) Compute Mash distances
