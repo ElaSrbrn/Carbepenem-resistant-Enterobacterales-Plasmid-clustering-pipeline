@@ -1,5 +1,5 @@
 # Enterobacterales: Chromosomal, and plasmid-clustering pipeline
-This repository offers description of the analytical steps needed for plasmid-encoded resistance dynamics investigation using Oxford Nanopore reads. This README outlines what to do and which tools to use. There are also automated softwares that provide similar analyses for non-experts, but the tools and parameters that they use are usually not fully visible. 
+This repository offers description of the analytical steps needed for plasmid-encoded resistance dynamics investigation using Oxford Nanopore reads. This README outlines what to do and which tools to use. There are also automated softwares that provide similar analyses for non-experts, but the tools and parameters that they use are usually not fully visible. This pipeline was used in the study xxx and the study sequences are available in the National Center for Biotechnology Information (NCBI) under BioProject accession number PRJNA1297122.
 
 ---
 
@@ -35,7 +35,7 @@ Identify and compare plasmids (and chromosomes) from relevant bacterial isolates
 
 ## 4. Detailed Steps & Codes
 
-> Note: Replace placeholder paths, models, parameters as appropriate.
+> Note: Replace placeholder paths, models, parameters as appropriate. All software versions are listed below.
 
 ### 4.1 Basecalling
 
@@ -219,7 +219,8 @@ pling align --containment_distance 0.3 --cores 8 --sourmash plasmid.txt "$OUTDIR
 ### 4.10 Miscellaneous & Reporting
 
 - SNP/Mash distance matrices and visualizations were done manually
-- In general, I recommend bandage to get assembly visualisations and ProkSee for visualisation of functional annotations. 
+- In general, I recommend bandage to get assembly visualisations and ProkSee for visualisation of functional annotations.
+- Be careful when re-running assemblies and matching contigs previously annotated with MOB-Suite to the new assemblies (i.e., with regards to contig length etc.), as flye might change the contig-numbering when re-running again
 - Species identification via Pathogenwatch and/or PubMLST (see corresponding publication)
 
 ---
@@ -243,12 +244,11 @@ project/
 
 ## 6. Software Checklist
 
-- Dorado
-- Porechop, NanoFilt, Seqkit
-- Flye
-- Minimap2, Samtools
-- Medaka v2.0.1
-- MOB-suite
-- AMRFinderPlus
-- Snippy, snippy-core, snp-dists
-- Mash, Pling, Sourmash
+- Dorado (v5.0)
+- Porechop (v0.2.3), NanoFilt (v2.8.0), Seqkit (v2.10.0)
+- Flye (v2.9.5)
+- Minimap2 (v2.2.9), Samtools (v1.16.1)
+- Medaka (v2.0.1)
+- MOB-suite (v3.1.8)
+- AMRFinderPlus (v4.0.3)
+- Mash (v2.3), Pling (v1.0.1)
