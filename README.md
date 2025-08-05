@@ -235,7 +235,6 @@ project/
 ├─ medaka/                  # polished assemblies
 ├─ mob/                     # plasmid reconstruction
 ├─ amr/                     # AMR gene tables
-├─ snippy/                  # chromosomal SNP results
 ├─ clustering/             # plasmid clustering & distances
 └─ reports/                 # summary tables & figures
 ```
