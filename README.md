@@ -1,4 +1,4 @@
-# Enterobacterales: Chromosomal, and plasmid-clustering pipeline
+# Carbapenem-resistant Enterobacterales: Plasmid-clustering pipeline
 This repository offers description of the analytical steps needed for plasmid-encoded resistance dynamics investigation using Oxford Nanopore reads. This README outlines what to do and which tools to use. There are also automated softwares that provide similar analyses for non-experts, but the tools and parameters that they use are usually not fully visible. This pipeline was used in the study xxx and the study sequences are available in the National Center for Biotechnology Information (NCBI) under BioProject accession number PRJNA1297122.
 
 ---
