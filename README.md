@@ -20,7 +20,6 @@ Identify and compare plasmids (and chromosomes) from relevant bacterial isolates
 5. **Consensus polishing**: Correct (Medaka v2.0.1 with `--bacteria` flag)
 6. **Plasmid reconstruction & typing**: MOB‑Suite (mob\_recon)
 7. **AMR gene detection**: AMRFinderPlus
-8. **Chromosomal relatedness**: SNP calling & core alignment (Snippy + snp-dists)
 9. **Plasmid relatedness**: Mash first, then cluster (e.g. DCJ distance via Pling)
 10. **Miscellaneous**: Manual SNP/Mash matrices & visualizations; species ID via Pathogenwatch or PubMLST
 
@@ -188,9 +187,7 @@ done
 
 ### 4.8 Chromosomal SNP Analysis
 
-**Tools:** Snippy, snippy-core, snp-dists
-
-tbd
+For more detailed information please refer to the methods section in our preprint cited above. 
 
 ### 4.9 Plasmid Clustering / Distances
 
@@ -219,9 +216,9 @@ pling align --containment_distance 0.3 --cores 8 --sourmash plasmid.txt "$OUTDIR
 ### 4.10 Miscellaneous & Reporting
 
 - SNP/Mash distance matrices and visualizations were done manually
-- In general, I recommend bandage to get assembly visualisations and ProkSee for visualisation of functional annotations.
+- In general, I have had good experience with bandage (cited in the preprint) to get assembly visualisations and ProkSee for visualisation of functional annotations.
 - Be careful when re-running assemblies and matching contigs previously annotated with MOB-Suite to the new assemblies (i.e., with regards to contig length etc.), as flye might change the contig-numbering when re-running again
-- Species identification via Pathogenwatch and/or PubMLST (see corresponding publication)
+- Species identification was conducted externally via Pathogenwatch and/or PubMLST (see corresponding publication)
 
 ---
 
